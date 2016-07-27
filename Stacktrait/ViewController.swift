@@ -8,17 +8,50 @@
 
 import UIKit
 
+extension CGSize {
+    var isNarrowWidth: Bool {
+        return width < height
+    }
+}
+
+struct Design {
+    
+    static let wChR = UITraitCollection(traitsFromCollections: [UITraitCollection(horizontalSizeClass: .Compact), UITraitCollection(verticalSizeClass: .Regular)])
+    static let wRhC = UITraitCollection(traitsFromCollections: [UITraitCollection(horizontalSizeClass: .Regular), UITraitCollection(verticalSizeClass: .Compact)])
+    
+    let traitCollection: UITraitCollection
+    
+    init(compactWidth: Bool) {
+        traitCollection = compactWidth ? Design.wChR : Design.wRhC
+    }
+    
+}
+
+
 class ViewController: UIViewController {
 
+    var design: Design?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        design = Design(compactWidth: size.isNarrowWidth)
+        setOverrideTraitCollection(design?.traitCollection, forChildViewController: childViewControllers[0])
+    }
+    
+    override func overrideTraitCollectionForChildViewController(childViewController: UIViewController) -> UITraitCollection? {
+        return design?.traitCollection
+    }
+    
+    
+    override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        design = Design(compactWidth: view.bounds.size.isNarrowWidth)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
 
 }
