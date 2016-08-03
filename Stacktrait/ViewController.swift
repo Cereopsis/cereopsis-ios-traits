@@ -46,7 +46,8 @@ class ViewController: UIViewController {
         return design?.traitCollection
     }
     
-    
+    // This allows us to orient ourselves properly at launch. It doesn't get called thereafter but if we
+    // omit it, we won't get what we want until e.g the device is rotated.
     override func traitCollectionDidChange(previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         design = Design(compactWidth: view.bounds.size.isNarrowWidth)
